@@ -1,0 +1,3 @@
+[submodule "xv6"]
+	path = xv6
+	url = git@github.com:sys-nthu/xv6-devel.git
