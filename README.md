@@ -119,3 +119,48 @@ Then, run `perf report`. [Here's an example of what you could see](https://en.it
 
 * How many context switches occur during your run? Can you use `time` to measure the overall running time and find out the *number of context switch per second*?
 * Can you infer whether `nanosleep()` puts the process to sleep or spins?
+
+Excellent idea — introducing external interference using `stress` will help students understand how **system load** affects syscall latency, context switching, and scheduler behavior. It adds real-world unpredictability and sharpens their ability to analyze timing variance.
+
+Here’s how you can incorporate that into the lab:
+
+---
+
+### Experiment 2-4: Interference with `stress`
+
+In this experiment, you'll deliberately **introduce CPU or memory contention** to observe how system load affects timing overhead.
+#### Step 1: Install `stress`
+
+```sh
+sudo apt-get update && sudo apt-get install -y stress
+```
+
+#### Step 2: Run `stress` in the Background
+
+Open a **separate terminal**, and run:
+
+```sh
+stress --cpu 2 --timeout 20
+```
+
+This creates 2 busy loops that consume CPU for 20 seconds.
+
+
+#### Step 3: Run Your Timing Program During Interference
+
+In your original terminal, run:
+
+```sh
+make run_vdso
+make run_novdso
+make sleep1
+make raw_sleep1
+```
+
+Compare the results you observe **with and without `stress` running**.
+
+### Questions
+
+* How does the timing variability change under CPU stress?
+* Does it affect syscall (`run_novdso`) more than VDSO (`run_vdso`)?
+* For the sleep experiments (`sleep1`, `sleep10`), does `stress` introduce **more outliers**?
