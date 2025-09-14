@@ -7,15 +7,15 @@ PRELOAD = disable-vdso.so
 .PHONY: clean run_vdso run_novdso perf_run perf_run_novdso
 
 
-all: $(TARGET)
+all: $(TARGET) 
 
-no_sleep: $(SRC) 
+no_sleep: $(SRC) $(PRELOAD)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
 
-sleep1: $(SRC)
+sleep1: $(SRC) $(PRELOAD)
 	$(CC) $(CFLAGS) -DMEASURE_SLEEP -DS=1 -o $(TARGET) $(SRC)
 
-sleep10: $(SRC)
+sleep10: $(SRC) $(PRELOAD)
 	$(CC) $(CFLAGS) -DMEASURE_SLEEP -DS=10 -o $(TARGET) $(SRC)
 
 run_vdso:
@@ -33,7 +33,6 @@ perf_run_novdso:
 	sudo LD_PRELOAD=./$(PRELOAD) perf record -e sched:sched_switch -a -- ./$(TARGET)
 
 
-# Build the disable-vdso shim
 $(PRELOAD): disable-vdso.c
 	$(CC) -Wall -fPIC -shared -o $(PRELOAD) disable-vdso.c -ldl
 

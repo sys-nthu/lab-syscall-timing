@@ -33,11 +33,12 @@ int main(int argc, char *argv[]) {
         times[i] = end - start;
     }
 
-    // Subtract sleep duration (in ns) if needed
-    uint64_t sleep_ns = (uint64_t)S * 1000000L;
+    // Subtract sleep duration (in ns)
+    
     uint64_t sum = 0;
     for (i = 0; i < N; i++) {
 #ifdef MEASURE_SLEEP
+        uint64_t sleep_ns = (uint64_t)S * 1000000L;
         if (times[i] > sleep_ns) times[i] -= sleep_ns;
         else times[i] = 0;
 #endif

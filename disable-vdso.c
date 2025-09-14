@@ -1,4 +1,5 @@
 #define _GNU_SOURCE
+#include <unistd.h>
 #include <dlfcn.h>
 #include <time.h>
 #include <sys/syscall.h>
