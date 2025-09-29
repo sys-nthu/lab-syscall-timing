@@ -1,11 +1,11 @@
-// minimal-pipe-pingpong-affinity-simple.c
+// pipe.c
 // Build (default: both on CPU0):
-//   gcc -O2 -Wall -Wextra -std=c11 minimal-pipe-pingpong-affinity-simple.c -o pingpong
+//   gcc -O2 -Wall -Wextra -std=c11 pipe.c -o ping-00
 // Build (parent->CPU0, child->CPU1):
-//   gcc -O2 -Wall -Wextra -std=c11 minimal-pipe-pingpong-affinity-simple.c -o pingpong \
+//   gcc -O2 -Wall -Wextra -std=c11 pipe.c -o ping-01 \
 //       -DPARENT_CPU=0 -DCHILD_CPU=1
 // Disable pinning:
-//   gcc -O2 -Wall -Wextra -std=c11 minimal-pipe-pingpong-affinity-simple.c -o pingpong -DUSE_AFFINITY=0
+//   gcc -O2 -Wall -Wextra -std=c11 pipe.c -o ping -DUSE_AFFINITY=0
 
 #define _GNU_SOURCE
 #include <errno.h>
