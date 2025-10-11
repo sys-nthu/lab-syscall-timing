@@ -4,10 +4,10 @@ In this lab, you will explore how long it takes to do **nothing** (a little bett
 You will run this experiment on: **xv6-riscv** and **Linux x86-64** (with and without `vdso`).
 
 You will learn:
+
 * The overhead of entering and exiting the kernel.
 * Context switch behavior.
 * The variability introduced by interrupts and scheduling.
-
 
 ## Part 1: Timing on xv6-riscv
 
@@ -28,14 +28,17 @@ Run the provided program as-is, and answer the following questions.
 * What might cause some iterations to take longer than others?
 
 ### Experiment 1-2: Do nothing + sleep
-Recompile the same program using the `MEASURE_SLEEP` flag to introduce an intentional sleep between the two system calls (`-DS=1` will set the `S` macro to 1, this is the number of tick to sleep):
+
+Recompile the same program (don't forget to `make clean` first) using the `MEASURE_SLEEP` flag to introduce an intentional sleep between the two system calls (`-DS=1` will set the `S` macro to 1, this is the number of tick to sleep):
+
 ```bash=
-make CPFLAGS='-DMEASURE_SLEEP -DS=1' qemu
+make CPPFLAGS='-DMEASURE_SLEEP -DS=1' qemu
 ```
 
 Then set a higher tick:
+
 ```bash=
-make CPFLAGS='-DMEASURE_SLEEP -DS=10' qemu
+make CPPFLAGS='-DMEASURE_SLEEP -DS=10' qemu
 ```
 
 1. How does the adjusted average overhead change as `S` increases?
@@ -43,7 +46,6 @@ make CPFLAGS='-DMEASURE_SLEEP -DS=10' qemu
 3. Can you observe a clear overhead due to sleep-induced context switches?
 
 ## Part 2: Timing on Linux x86 (with and without `vdso`)
-
 
 Now we will continue our investigation of system call overhead, this time on a Linux system. Unlike xv6, Linux implements **fast paths** for many common system calls using a mechanism called **VDSO (Virtual Dynamic Shared Object)**.
 
@@ -53,7 +55,6 @@ You will explore the overhead of calling `clock_gettime(CLOCK_MONOTONIC)` under 
 2. **Without VDSO**: we force the system to execute a full syscall using `LD_PRELOAD` and a custom override.
 
 You will also use the Linux tool `perf` to **observe scheduler behavior**, especially when delays (`nanosleep`) are introduced.
-
 
 ### Experiment 2-1: Timing `clock_gettime()` back-to-back
 
@@ -82,7 +83,6 @@ strace -e clock_gettime -f LD_PRELOAD=./disable-vdso.so ./timing_nothing_linux
 strace -e clock_gettime -f ./timing_nothing_linux
 ```
 
-
 ### Experiment 2-2: do nothing + sleep
 
 Now compile and run with sleep inserted between the two timing calls:
@@ -95,13 +95,11 @@ make sleep10
 make run_vdso
 ```
 
-
 #### Questions
 
 * After subtracting the known sleep duration, what is the remaining overhead? Is it consistent? How does it scale with longer sleep durations?
 * Do outliers become more frequent with longer sleeps?
 * Is the wakeup timing consistent?
-
 
 ### Experiment 2-3: Observing Context Switches with `perf`
 
@@ -113,7 +111,6 @@ make perf_run_novdso
 ```
 
 Then, run `perf report`. [Here's an example of what you could see](https://en.ittrip.xyz/c-language/c-perf-context-switches#index_id11).
-
 
 ### Questions
 
@@ -129,6 +126,7 @@ Here’s how you can incorporate that into the lab:
 ### Experiment 2-4: Interference with `stress`
 
 In this experiment, you'll deliberately **introduce CPU or memory contention** to observe how system load affects timing overhead.
+
 #### Step 1: Install `stress`
 
 ```sh
@@ -144,7 +142,6 @@ stress --cpu 2 --timeout 20
 ```
 
 This creates 2 busy loops that consume CPU for 20 seconds.
-
 
 #### Step 3: Run Your Timing Program During Interference
 
